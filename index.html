@@ -2,65 +2,75 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Chá de Panela</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chá de Panela 💖</title>
 
 <style>
 body {
-  font-family: 'Arial';
-  background: linear-gradient(135deg, #ffe4ec, #fff);
+  font-family: Arial;
+  background: linear-gradient(135deg, #ffe4ec, #ffffff);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
 }
 
 .container {
   max-width: 650px;
   margin: auto;
   background: white;
-  padding: 25px;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 h1 {
   color: #c2185b;
-  font-size: 32px;
 }
 
 input {
-  padding: 12px;
+  padding: 10px;
   width: 80%;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+ul {
+  padding: 0;
 }
 
 li {
   list-style: none;
-  padding: 14px;
+  padding: 12px;
   margin: 8px;
-  background: #fafafa;
-  border-radius: 12px;
-  transition: 0.2s;
+  background: #f7f7f7;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 li:hover {
   background: #ffe4ec;
-  transform: scale(1.02);
 }
 
 .reservado {
   background: #ddd;
-  color: #888;
   text-decoration: line-through;
+  cursor: not-allowed;
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Chá de Panela João e Amanda</h1>
+<h1>Chá de Panela 💖</h1>
 
 <input id="nome" placeholder="Seu nome">
+<input id="whats" placeholder="Seu WhatsApp">
 
 <ul id="lista"></ul>
 
@@ -68,85 +78,86 @@ li:hover {
 
 <script>
 
-<script>
+// =======================
+// 🔥 CONFIGURAÇÃO API
+// =======================
+const API = "COLE_AQUI_SUA_URL_DO_APPS_SCRIPT";
 
-const API = "https://script.google.com/macros/s/AKfycbzeKDnx1a1xx-jrztRCjUCBgYTHT7dZSxxm_iPSiqoYflle91_2La0YX4CwA944xpuLfA/exec";
-
-// SUA LISTA (mantém a sua)
+// =======================
+// 🎁 LISTA DE PRESENTES
+// =======================
 const itens = [
-  "Panela média","Panela grande","Panela de pressão","Frigideira","Jogo de panelas",
-  "Escorredor de macarrão","Escorredor de louça","Ralador","Espremedor de alho",
-  "Espremedor de frutas","Liquidificador","Batedeira","Mixer","Jarra de suco",
-  "Conjunto de copos","Xícaras","Canecas","Pratos fundos","Pratos rasos",
-  "Jogo de talheres","Facas de cozinha","Tábua de corte","Conjunto de potes",
-  "Potes de plástico","Travessas","Assadeiras","Forma de bolo","Colheres de pau",
-  "Concha","Pegador de massa","Saleiro","Açucareiro","Vassoura","Rodo",
-  "Baldes","Pá de lixo","Lixeira","Panos de prato","Toalha de mesa",
-  "Toalhas de rosto","Toalhas de banho","Lençóis","Fronhas","Cobertor",
-  "Varal de roupas","Relógio de parede","Organizadores","Cesto de roupa suja",
-  "Tapete de cozinha","Tapete de banheiro"
+"Frigideira","Jogo de panelas", "Escorredor de macarrão","Escorredor de louça","Ralador","Espremedor de alho", "Espremedor de frutas","Liquidificador","Batedeira","Mixer","Jarra de suco", "Conjunto de copos","Xícaras","Jogo de Pratos", "Jogo de talheres","Facas de cozinha","Tábua de corte","Conjunto de potes","Travessas","Assadeiras","Forma de bolo","Colheres de pau", "Concha","Pegador de massa","Saleiro","Açucareiro","Vassoura","Rodo", "Baldes","Pá de lixo","Lixeira","Panos de prato","Toalha de mesa", "Toalhas de rosto","Lençóis","Fronhas","Cobertor", "Varal de roupas","Relógio de parede","Organizadores", "Tapete de cozinha","Tapete de banheiro"
 ];
 
-// cache local (🔥 parte importante)
-let reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
+// =======================
+// 📦 RESERVAS
+// =======================
+let reservas = [];
 
-// salva cache
-function salvarCache() {
-  localStorage.setItem("reservas", JSON.stringify(reservas));
-}
-
-// carrega API com segurança total
+// =======================
+// 📥 CARREGAR DADOS
+// =======================
 async function carregar() {
   try {
     let res = await fetch(API);
     let text = await res.text();
 
-    let data = [];
-
     try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.log("API não retornou JSON válido");
-      data = [];
+      reservas = JSON.parse(text);
+    } catch {
+      reservas = [];
     }
 
-    reservas = data;
-    salvarCache();
-
-  } catch (e) {
-    console.log("Falha API, usando cache local");
+  } catch {
+    reservas = [];
   }
 
   render();
 }
 
-// render seguro
+// =======================
+// 🖥️ RENDER LISTA
+// =======================
 function render() {
   let ul = document.getElementById("lista");
+
+  if (!ul) return;
 
   ul.innerHTML = "";
 
   itens.forEach(item => {
 
+    let ja = reservas.find(r => r.presente === item);
+
     let li = document.createElement("li");
     li.innerText = item;
 
-    li.onclick = () => reservar(item);
+    if (ja) {
+      li.classList.add("reservado");
+      li.innerText += " (reservado)";
+    } else {
+      li.onclick = () => reservar(item);
+    }
 
     ul.appendChild(li);
   });
-}}
-// reserva blindada
+}
+
+// =======================
+// 🎁 RESERVAR ITEM
+// =======================
 async function reservar(item) {
 
   let nome = document.getElementById("nome").value.trim();
+  let whats = document.getElementById("whats").value.trim();
 
-  if (!nome) {
-    alert("Digite seu nome 💖");
+  if (!nome || !whats) {
+    alert("Preencha nome e WhatsApp 💖");
     return;
   }
 
-  // evita duplicação local imediata
+  // evita duplicação
   if (reservas.find(r => r.presente === item)) {
     alert("Esse presente já foi escolhido 💔");
     return;
@@ -157,28 +168,27 @@ async function reservar(item) {
       method: "POST",
       body: JSON.stringify({
         nome,
-        presente: item
+        presente: item,
+        whatsapp: whats
       })
     });
-  } catch (e) {
-    alert("Erro ao salvar, tente novamente");
+  } catch {
+    alert("Erro ao salvar reserva");
     return;
   }
 
-  // atualiza cache local instantâneo
-  reservas.push({ nome, presente: item });
-  salvarCache();
+  // WhatsApp automático
+  let msg = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
+  let url = `https://wa.me/55${whats}?text=${encodeURIComponent(msg)}`;
 
-  // WhatsApp (igual você queria)
-  let mensagem = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
-  let numero = "55SEUNUMEROAQUI";
-
-  let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
   window.open(url, "_blank");
 
-  render();
+  carregar();
 }
 
+// =======================
+// 🚀 INICIAR
+// =======================
 carregar();
 
 </script>

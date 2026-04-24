@@ -8,56 +8,83 @@
 
 <style>
 body {
-  font-family: Arial;
-  background: linear-gradient(135deg, #ffe4ec, #ffffff);
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding: 20px;
+  background: linear-gradient(135deg, #ffe4ec, #fff);
   text-align: center;
 }
 
 .container {
-  max-width: 650px;
+  max-width: 700px;
   margin: auto;
   background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
 }
 
 h1 {
   color: #c2185b;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #666;
 }
 
 input {
-  padding: 10px;
-  width: 80%;
-  margin: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  width: 85%;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+input:focus {
+  border-color: #c2185b;
+  box-shadow: 0 0 8px rgba(194,24,91,0.2);
 }
 
 ul {
   padding: 0;
+  margin-top: 20px;
 }
 
 li {
   list-style: none;
-  padding: 12px;
-  margin: 8px;
-  background: #f7f7f7;
-  border-radius: 8px;
+  padding: 14px;
+  margin: 10px;
+  background: #fafafa;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.25s;
+  font-size: 16px;
+  border: 1px solid #eee;
 }
 
 li:hover {
   background: #ffe4ec;
+  transform: scale(1.02);
+  border-color: #f8bbd0;
 }
 
 .reservado {
-  background: #ddd;
+  background: #e0e0e0 !important;
+  color: #777;
   text-decoration: line-through;
   cursor: not-allowed;
+  transform: none !important;
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #aaa;
 }
 </style>
 

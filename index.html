@@ -58,102 +58,124 @@ li {
 
 <script>
 
-const API = "https://script.google.com/macros/s/AKfycbwKqzcKTt92c0LRNZOR9Fd6CJVshFFiLXX3WvKksXcU3zUYYHmMWzu6fthpXRLoFjhqDQ/exec";
+<script>
 
-  const itens = [  //  COZINHA
-  "Panela de pressão",
-  "Frigideira",
-  "Jogo de panelas",
-  "Escorredor de macarrão",
-  "Escorredor de louça",
-  "Ralador",
-  "Espremedor de alho",
-  "Espremedor de frutas",
-  "Liquidificador",
-  "Batedeira",
-  "Mixer",
-  "Jarra de suco",
-  "Conjunto de copos",
-  "Xícaras",
-  "Jogo de Pratos",
-  "Jogo de talheres",
-  "Facas de cozinha",
-  "Tábua de corte",
-  "Conjunto de potes",
-  "Potes de plástico",
-  "Travessas",
-  "Assadeiras",
-  "Forma de bolo",
-  "Colheres de pau",
-  "Concha",
-  "Pegador de massa",
-  "Saleiro",
-  "Açucareiro",
+const API = "https://script.google.com/macros/s/AKfycbzeKDnx1a1xx-jrztRCjUCBgYTHT7dZSxxm_iPSiqoYflle91_2La0YX4CwA944xpuLfA/exec";
 
-  //  CASA
-  "Vassoura",
-  "Rodo",
-  "Baldes",
-  "Pá de lixo",
-  "Lixeira",
-  "Panos de prato",
-  "Toalha de mesa",
-  "Toalhas de rosto",
-  "Lençóis",
-  "Fronhas",
-  "Cobertor",
-
-  //  UTILIDADES
-  "Varal de roupas",
-  "Relógio de parede",
-  "Organizadores",
-  "Tapete de cozinha",
-  "Tapete de banheiro"
+// SUA LISTA (mantém a sua)
+const itens = [
+  "Panela média","Panela grande","Panela de pressão","Frigideira","Jogo de panelas",
+  "Escorredor de macarrão","Escorredor de louça","Ralador","Espremedor de alho",
+  "Espremedor de frutas","Liquidificador","Batedeira","Mixer","Jarra de suco",
+  "Conjunto de copos","Xícaras","Canecas","Pratos fundos","Pratos rasos",
+  "Jogo de talheres","Facas de cozinha","Tábua de corte","Conjunto de potes",
+  "Potes de plástico","Travessas","Assadeiras","Forma de bolo","Colheres de pau",
+  "Concha","Pegador de massa","Saleiro","Açucareiro","Vassoura","Rodo",
+  "Baldes","Pá de lixo","Lixeira","Panos de prato","Toalha de mesa",
+  "Toalhas de rosto","Toalhas de banho","Lençóis","Fronhas","Cobertor",
+  "Varal de roupas","Relógio de parede","Organizadores","Cesto de roupa suja",
+  "Tapete de cozinha","Tapete de banheiro"
 ];
 
-let reservas = [];
+// cache local (🔥 parte importante)
+let reservas = JSON.parse(localStorage.getItem("reservas") || "[]");
 
+// salva cache
+function salvarCache() {
+  localStorage.setItem("reservas", JSON.stringify(reservas));
+}
+
+// carrega API com segurança total
 async function carregar() {
   try {
     let res = await fetch(API);
+    let text = await res.text();
 
-    if (!res.ok) {
-      console.log("Erro na API");
-      reservas = [];
-    } else {
-      reservas = await res.json();
+    let data = [];
+
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.log("API não retornou JSON válido");
+      data = [];
     }
 
+    reservas = data;
+    salvarCache();
+
   } catch (e) {
-    console.log("Erro de conexão:", e);
-    reservas = [];
+    console.log("Falha API, usando cache local");
   }
 
   render();
-}    ul.appendChild(li);
+}
+
+// render seguro
+function render() {
+  let ul = document.getElementById("lista");
+  if (!ul) return;
+
+  ul.innerHTML = "";
+
+  itens.forEach(item => {
+
+    let ja = reservas.find(r => r.presente === item);
+
+    let li = document.createElement("li");
+    li.innerText = item;
+
+    if (ja) {
+      li.classList.add("reservado");
+      li.innerText += " (reservado)";
+    } else {
+      li.onclick = () => reservar(item);
+    }
+
+    ul.appendChild(li);
   });
 }
 
+// reserva blindada
 async function reservar(item) {
 
-  let nome = document.getElementById("nome").value;
+  let nome = document.getElementById("nome").value.trim();
 
   if (!nome) {
-    alert("Digite seu nome!");
+    alert("Digite seu nome 💖");
     return;
   }
 
-  await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      nome: nome,
-      presente: item
-    })
-  });
+  // evita duplicação local imediata
+  if (reservas.find(r => r.presente === item)) {
+    alert("Esse presente já foi escolhido 💔");
+    return;
+  }
 
-  alert("Presente reservado com sucesso 💖");
+  try {
+    await fetch(API, {
+      method: "POST",
+      body: JSON.stringify({
+        nome,
+        presente: item
+      })
+    });
+  } catch (e) {
+    alert("Erro ao salvar, tente novamente");
+    return;
+  }
 
-  carregar();
+  // atualiza cache local instantâneo
+  reservas.push({ nome, presente: item });
+  salvarCache();
+
+  // WhatsApp (igual você queria)
+  let mensagem = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
+  let numero = "55SEUNUMEROAQUI";
+
+  let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, "_blank");
+
+  render();
 }
 
 carregar();

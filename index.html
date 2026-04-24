@@ -60,8 +60,7 @@ li {
 
 const API = "https://script.google.com/macros/s/AKfycbxnc_f5dXE1vGLPs3KfUsaLGRdja2BNduCf-0mbHBJvA8clrhhHEW-ByuslL6FqVCrY0A/exec";
 
-  const itens = [
-  //  COZINHA
+  const itens = [  //  COZINHA
   "Panela de pressão",
   "Frigideira",
   "Jogo de panelas",
@@ -115,30 +114,23 @@ const API = "https://script.google.com/macros/s/AKfycbxnc_f5dXE1vGLPs3KfUsaLGRdj
 let reservas = [];
 
 async function carregar() {
-  let res = await fetch(API);
-  reservas = await res.json();
-  render();
-}
+  try {
+    let res = await fetch(API);
 
-function render() {
-  let ul = document.getElementById("lista");
-  ul.innerHTML = "";
-
-  itens.forEach(item => {
-
-    let ja = reservas.find(r => r.presente === item);
-
-    let li = document.createElement("li");
-    li.innerText = item;
-
-    if (ja) {
-      li.classList.add("reservado");
-      li.innerText += " (reservado)";
+    if (!res.ok) {
+      console.log("Erro na API");
+      reservas = [];
     } else {
-      li.onclick = () => reservar(item);
+      reservas = await res.json();
     }
 
-    ul.appendChild(li);
+  } catch (e) {
+    console.log("Erro de conexão:", e);
+    reservas = [];
+  }
+
+  render();
+}    ul.appendChild(li);
   });
 }
 

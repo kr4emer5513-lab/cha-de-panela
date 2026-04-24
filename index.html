@@ -6,39 +6,49 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: 'Arial';
   background: linear-gradient(135deg, #ffe4ec, #fff);
-  text-align: center;
-  padding: 20px;
 }
 
 .container {
-  max-width: 500px;
+  max-width: 650px;
   margin: auto;
   background: white;
-  padding: 20px;
-  border-radius: 15px;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-h1 { color: #d63384; }
+h1 {
+  color: #c2185b;
+  font-size: 32px;
+}
 
 input {
-  padding: 10px;
+  padding: 12px;
   width: 80%;
-  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 
 li {
   list-style: none;
-  padding: 10px;
+  padding: 14px;
   margin: 8px;
-  background: #f7f7f7;
+  background: #fafafa;
+  border-radius: 12px;
+  transition: 0.2s;
   cursor: pointer;
-  border-radius: 8px;
+}
+
+li:hover {
+  background: #ffe4ec;
+  transform: scale(1.02);
 }
 
 .reservado {
   background: #ddd;
+  color: #888;
   text-decoration: line-through;
 }
 </style>
@@ -113,9 +123,18 @@ async function carregar() {
 // render seguro
 function render() {
   let ul = document.getElementById("lista");
-  if (!ul) return;
+
+  if (!ul) {
+    console.log("ERRO: não encontrou #lista no HTML");
+    return;
+  }
 
   ul.innerHTML = "";
+
+  if (!itens || itens.length === 0) {
+    console.log("Lista vazia");
+    return;
+  }
 
   itens.forEach(item => {
 
@@ -134,7 +153,6 @@ function render() {
     ul.appendChild(li);
   });
 }
-
 // reserva blindada
 async function reservar(item) {
 

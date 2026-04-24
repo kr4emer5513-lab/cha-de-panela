@@ -70,7 +70,6 @@ li:hover {
 <h1>Chá de Panela João e Amanda</h1>
 
 <input id="nome" placeholder="Seu nome">
-<input id="whats" placeholder="Seu WhatsApp">
 
 <ul id="lista"></ul>
 
@@ -150,10 +149,9 @@ function render() {
 async function reservar(item) {
 
   let nome = document.getElementById("nome").value.trim();
-  let whats = document.getElementById("whats").value.trim();
 
-  if (!nome || !whats) {
-    alert("Preencha nome e WhatsApp 💖");
+  if (!nome) {
+    alert("Digite seu nome 💖");
     return;
   }
 
@@ -168,26 +166,27 @@ async function reservar(item) {
       method: "POST",
       body: JSON.stringify({
         nome,
-        presente: item,
-        whatsapp: whats
+        presente: item
       })
     });
   } catch {
-    alert("Erro ao salvar reserva");
+    alert("Erro ao salvar");
     return;
   }
 
-  // WhatsApp automático
-let numeroDestino = "5554981549836"; // seu WhatsApp (só números)
+  // 💖 WHATSAPP FIXO (SEU NÚMERO SÓ)
+  let numeroDestino = "5554981549836";
 
-let mensagem = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
+  let mensagem = `💍 Chá de Panela 💍%0A
+Olá! Sou ${nome}%0A
+Vou levar o presente: ${item}`;
 
-let url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
+  let url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
 
-window.open(url, "_blank");  
-carregar();
+  window.open(url, "_blank");
+
+  carregar();
 }
-
 // =======================
 // 🚀 INICIAR
 // =======================

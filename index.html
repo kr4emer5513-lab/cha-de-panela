@@ -178,12 +178,14 @@ async function reservar(item) {
   }
 
   // WhatsApp automático
-  let msg = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
-let numeroDestino = "5554981549836"; // SEU NÚMERO AQUI
+let numeroDestino = "5554981549836"; // seu WhatsApp (só números)
 
-let url = `https://wa.me/$54981549836?text=${encodeURIComponent(msg)}`;  window.open(url, "_blank");
+let mensagem = `Olá! Sou ${nome} e vou levar o presente: ${item}`;
 
-  carregar();
+let url = `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensagem)}`;
+
+window.open(url, "_blank");  
+carregar();
 }
 
 // =======================
